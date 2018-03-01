@@ -46,6 +46,7 @@ const server = require('http').Server(app.callback()),
 io.on('connection', (socket) => {
     console.log('connected');
     socket.on('jack', data=>{
+        console.log(data);
         io.sockets.emit('jack',data)
     });
     socket.on('join', ()=>{
