@@ -54,6 +54,6 @@ io.on('connection', (socket) => {
     })
 });
 
-server.listen(1337);
-console.info('Now running on localhost:1337');
+server.listen(9001);
+console.info('Now running on localhost:9001');
 app.listen(12345);
