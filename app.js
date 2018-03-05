@@ -3,6 +3,7 @@ const Router = require('koa-router');
 const app = new Koa();
 const router = new Router();
 const cors = require('koa2-cors');
+const fs = require('fs');
 
 // app.use( ctx  => {
 // 	ctx.body = 'hello Koa';
@@ -21,6 +22,19 @@ const two = (ctx, next) => {
     next();
 };
 
+let html = (ctx, next) => {
+    ctx.response.type = 'html';
+    fs.readFile('./dist/index.html', (err,data)=>{
+        //readFile()函数读取文件
+        if(err){
+
+        }else{
+            ctx.response.body = data
+        }
+        next();
+    })
+};
+
 let timeout = async (ctx, next) => {
     await setTimeout(()=>{
         console.log('timeout');
@@ -28,7 +42,7 @@ let timeout = async (ctx, next) => {
     next();
 };
 
-router.get('/v1', one, ctx => {
+router.get('/v1', html, ctx => {
     ctx.body = {name: 'Jack1'};
 });
 
