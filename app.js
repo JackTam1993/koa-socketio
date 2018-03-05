@@ -3,7 +3,8 @@ const Router = require('koa-router');
 const app = new Koa();
 const router = new Router();
 const cors = require('koa2-cors');
-const fs = require('fs');
+const fs = require('fs.promised')//安装的文件操作模块
+const serve = require('koa-static');
 
 // app.use( ctx  => {
 // 	ctx.body = 'hello Koa';
@@ -22,17 +23,11 @@ const two = (ctx, next) => {
     next();
 };
 
-let html = (ctx, next) => {
+let html = async (ctx, next) => {
     ctx.response.type = 'html';
-    fs.readFile('./dist/index.html', (err,data)=>{
-        //readFile()函数读取文件
-        if(err){
-
-        }else{
-            ctx.response.body = data
-        }
+    ctx.response.body = await fs.readFile('./dist/index.html', 'utf-8');
+        console.log('html');
         next();
-    })
 };
 
 let timeout = async (ctx, next) => {
@@ -42,9 +37,7 @@ let timeout = async (ctx, next) => {
     next();
 };
 
-router.get('/v1', html, ctx => {
-    ctx.body = {name: 'Jack1'};
-});
+// router.get('/v1', html);
 
 router.get('/v2', one, timeout, ctx => {
     ctx.body = {name: 'Jack2'};
@@ -60,6 +53,8 @@ app.use(cors({
     allowMethods: ['GET', 'POST', 'DELETE'],
     allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
 }));
+
+app.use(serve(__dirname + "/dist/", {extensions: ['html']}));
 
 const server = require('http').Server(app.callback()),
       io = require('socket.io')(server);
