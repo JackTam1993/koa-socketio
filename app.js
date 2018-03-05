@@ -21,11 +21,18 @@ const two = (ctx, next) => {
     next();
 };
 
+let timeout = async (ctx, next) => {
+    await setTimeout(()=>{
+        console.log('timeout');
+    },1000);
+    next();
+};
+
 router.get('/v1', one, ctx => {
     ctx.body = {name: 'Jack1'};
 });
 
-router.get('/v2', two,ctx => {
+router.get('/v2', one, timeout, ctx => {
     ctx.body = {name: 'Jack2'};
 });
 
